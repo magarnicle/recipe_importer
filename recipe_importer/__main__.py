@@ -27,7 +27,14 @@ def print_recipe(recipe: recipe_scrapers.AbstractScraper, as_webpage=False) -> N
     <body>
         <script type="application/ld+json">
 """
-    schema = json.dumps(recipe.schema.data, indent=2)
+    description = f"{recipe.description()}\n\nSource URL: {recipe.schema.data['mainEntityOfPage']}".strip(
+        "\n"
+    )
+    schema = json.dumps(
+        recipe.schema.data
+        | {"@context": "https://schema.org", "description": description},
+        indent=2,
+    )
     footer = """
         </script>
     </body>
